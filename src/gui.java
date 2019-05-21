@@ -2,16 +2,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
@@ -47,7 +43,11 @@ public class gui extends JFrame {
 		innerPanel.setLayout(new BorderLayout());
 		add(innerPanel);
 		
-		/* The first thing that should be drawn on the screen will be the background
+		// draw the intro then reset the panel
+		drawIntro();
+		innerPanel.removeAll();
+		
+		/* The first thing that should be drawn on the screen after the splash screen will be the background
 		 * image. This will be drawn using a JLabel applied directly on the frame and then
 		 * adding the content panel afterwards.
 		 */
@@ -55,7 +55,7 @@ public class gui extends JFrame {
 		background.setLocation(0, 0);
 		drawBackground(background, "ec_bg.png");
 		innerPanel.add(background);
-		
+		innerPanel.paintAll(getGraphics());
 	}
 	
 	
@@ -67,15 +67,28 @@ public class gui extends JFrame {
 		ImageIcon logo = new ImageIcon(this.getClass().getResource("logo.gif"));
 		JLabel icon = new JLabel(logo);
 		innerPanel.add(icon);
+		setVisible(true);
 		
 		// use audio stream to play intro song
-		Clip song = null;
-		AudioInputStream stream = null;
+		AudioInputStream bloodyStream = null;
 		try {
-			song = AudioSystem.getClip();
-			stream = AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("intro.wav"));
-			song.open(stream);
-			song.start();
+			// use DataLine interface to know when audio track ends
+			bloodyStream = AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("intro.wav"));
+			AudioFormat format = bloodyStream.getFormat();
+			DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+			SourceDataLine bloodyStone = (SourceDataLine) AudioSystem.getLine(info);
+			bloodyStone.open(format);
+			bloodyStone.start();
+			
+			byte[] bloodyStorm = new byte[4096];
+			int read = -1;
+			while((read = bloodyStream.read(bloodyStorm)) != -1)
+				bloodyStone.write(bloodyStorm, 0, read);
+			
+			bloodyStone.drain();
+			bloodyStone.close();
+			bloodyStream.close();
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -131,8 +144,6 @@ public class gui extends JFrame {
 	
 	public static void main(String[] args) {
 		gui GUI = new gui();
-		GUI.drawIntro();
-		GUI.setVisible(true);
 		
 	}
 }
