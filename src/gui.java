@@ -2,15 +2,31 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class gui extends JFrame {
 	
+	/* for multiple methods to get the screen size */
 	private Dimension screenSize;
 	
+	/* used to paint and change what's drawn on screen */
+	public JPanel innerPanel;
+	
+	
+	/**
+	 * Constructor, creates a full-screen JFrame and the panel, and adds the background art.
+	 */
 	public gui() {
 		// create window and set it to the full size of the screen
 		super("Solar Entertainment Console");
@@ -25,21 +41,47 @@ public class gui extends JFrame {
 		pack();
 		setResizable(false);
 		
+		// border layout, set the inner panel to the same size as the frame
+		innerPanel = new JPanel();
+		innerPanel.setSize(screenSize);
+		innerPanel.setLayout(new BorderLayout());
+		add(innerPanel);
+		
 		/* The first thing that should be drawn on the screen will be the background
 		 * image. This will be drawn using a JLabel applied directly on the frame and then
 		 * adding the content panel afterwards.
 		 */
 		JLabel background = new JLabel();
 		background.setLocation(0, 0);
-		drawBackground(background);
-		add(background);
-		
-		// border layout, set the inner panel to the same size as the frame
-		JPanel innerPanel = new JPanel();
-		innerPanel.setSize(screenSize);
-		innerPanel.setLayout(new BorderLayout());
+		drawBackground(background, "ec_bg.png");
+		innerPanel.add(background);
 		
 	}
+	
+	
+	/**
+	 * Draws and plays the sound associated with the introductory splash screen.
+	 */
+	public void drawIntro() {
+		// add the logo
+		ImageIcon logo = new ImageIcon(this.getClass().getResource("logo.gif"));
+		JLabel icon = new JLabel(logo);
+		innerPanel.add(icon);
+		
+		// use audio stream to play intro song
+		Clip song = null;
+		AudioInputStream stream = null;
+		try {
+			song = AudioSystem.getClip();
+			stream = AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("intro.wav"));
+			song.open(stream);
+			song.start();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+	
 	
 	/**
 	 * For the GUI and it's background to be properly scaled for different display types,
@@ -67,13 +109,13 @@ public class gui extends JFrame {
 	 * image. If the image has been moved or deleted, then the image is not set 
 	 * @param container: the JLabel that will hold the background image.
 	 */
-	private void drawBackground(JLabel container) {
+	private void drawBackground(JLabel container, String name) {
 		
 		BufferedImage raw = null;
 		
 		// if the file is not found, the background will remain un-set
 		try {
-			raw = ImageIO.read(new File("ec_bg.png"));
+			raw = ImageIO.read(new File(name));
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
@@ -89,6 +131,8 @@ public class gui extends JFrame {
 	
 	public static void main(String[] args) {
 		gui GUI = new gui();
+		GUI.drawIntro();
 		GUI.setVisible(true);
+		
 	}
 }
