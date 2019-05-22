@@ -1,13 +1,7 @@
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -30,6 +24,9 @@ public class appTile extends JPanel {
 	/* icon to be drawn */
 	private BufferedImage icon;
 	
+	/* name to be displayed when active */
+	private String name;
+	
 	
 	/**
 	 * Constructor, bulilds the tile and adds a picture of the app's logo and
@@ -39,7 +36,7 @@ public class appTile extends JPanel {
 	 * @param width: width
 	 * @param height: height
 	 * @param iconFile: the location of the application's icon that will be displayed across the console
-	 * @param name: the name of the application to displayto the user
+	 * @param name: the name of the application to display to the user
 	 */
 	public appTile(int x, int y, int width, int height, String iconFile, String name) {
 		// set the params
@@ -47,6 +44,7 @@ public class appTile extends JPanel {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.name = name;
 		
 		// set the icon in the middle of the tile
 		if (iconFile.isEmpty()) {
@@ -73,6 +71,9 @@ public class appTile extends JPanel {
 		// draw the outer rectangle, the icon and the name
 		g2.drawRoundRect(this.x, this.y, width, height, 10, 10);
 		g2.drawImage(icon, x + width / 2 - 24, y + height / 2 - 24, this);
+		
+		g2.setColor(new Color(0, 0, 0, 200));
+		g2.fillRoundRect(x + 1, y + 1, width - 2, height / 8, 10, 10);
 	}
 
 	
@@ -97,12 +98,10 @@ public class appTile extends JPanel {
 		JFrame fr = new JFrame();
 		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		fr.setSize(800, 800);
-		fr.getContentPane().setBackground(Color.RED);
+		fr.getContentPane().setBackground(Color.BLUE);
 		appTile ap = new appTile(10, 10, 300, 300, "", "None");
 		fr.getContentPane().add(ap);
 		fr.setVisible(true);
 	}
-	
-	
 	
 }
