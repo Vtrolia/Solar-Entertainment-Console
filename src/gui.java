@@ -188,15 +188,16 @@ public class gui extends JFrame {
 			for (int j = 0; j < apps[i].length; j++) {
 				// display a blank tile if there aren't enough per row
 				if (nameNum < names.length) {
-					apps[i][j] = new appTile(0, 0, width, height, iconPaths[nameNum], names[nameNum]);
-					apps[i][j].setBounds(x, y, width, height);
+					apps[i][j] = new appTile(2, 2, width, height, iconPaths[nameNum], names[nameNum]);
+					apps[i][j].setBounds(x, y, width + 4, height + 4);
 				}
 				else {
-					apps[i][j] = new appTile(0, 0, width, height, "Empty", "");
-					apps[i][j].setBounds(x, y, width, height);
+					apps[i][j] = new appTile(2, 2, width, height, "", "Empty");
+					apps[i][j].setBounds(x, y, width + 4, height + 4);
 				}
 				// move each tile according to the gaps needed
 				x += width + widthGap;
+				nameNum++;
 			}
 			y += height + heightGap;
 		}
@@ -215,7 +216,7 @@ public class gui extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		String[] a = {"a", "b"};
+		String[] a = {"abba", "baavbba"};
 		String[] b = {"no_icon.png", "no_icon.png"};
 		gui GUI = new gui(2, a, b);
 	}

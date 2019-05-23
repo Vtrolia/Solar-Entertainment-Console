@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -10,7 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class appTile extends JPanel {
+public class appTile extends JPanel implements MouseListener {
 	
 	/* the colors used to surroung the tile */
 	public static final Color OUTLINE_COLOR = Color.GRAY;
@@ -27,6 +29,7 @@ public class appTile extends JPanel {
 	
 	/* name to be displayed when active */
 	private String name;
+	private boolean active;
 	
 	
 	/**
@@ -46,6 +49,7 @@ public class appTile extends JPanel {
 		this.width = width;
 		this.height = height;
 		this.name = name;
+		this.active = false;
 		
 		// set the icon in the middle of the tile
 		if (iconFile.isEmpty()) {
@@ -58,6 +62,8 @@ public class appTile extends JPanel {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		addMouseListener(this);
 	}
 	
 	/**
@@ -66,18 +72,31 @@ public class appTile extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		
-		// set the outline to draw a nice looking, rounded gray rectangle border
+		// draw active_color if the tile is currently active, if not,
+		// draw the outline_color
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setStroke(new BasicStroke(3));
-		g2.setColor(OUTLINE_COLOR);
+		g2.setStroke(new BasicStroke(4));
+		if (active) {
+			g2.setColor(ACTIVE_COLOR);
+		}
+		else {
+			g2.setColor(OUTLINE_COLOR);
+		}
 		
 		// draw the outer rectangle, the icon and the name
-		g2.drawRoundRect(this.x, this.y, width, height, 10, 10);
+		g2.drawRect(this.x, this.y, width, height);
 		g2.drawImage(icon, x + width / 2 - 24, y + height / 2 - 24, this);
 		
 		// draw spot where name will appear
 		g2.setColor(new Color(0, 0, 0));
 		g2.fillRoundRect(x + 1, y + 1, width - 2, height / 8, 10, 10);
+		
+		// if the tile is active, display its name to the user
+		if (active) {
+			g2.setColor(Color.WHITE);
+			g2.setFont(new Font("Rockwell", Font.PLAIN, width / 10));
+			g2.drawString(name, 10, (int)(width / 8.5));
+		}
 	}
 
 	
@@ -96,6 +115,43 @@ public class appTile extends JPanel {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+	
+	/* public interfaces for when key presses and remote button entries are implemented */
+	public void setActive() {
+		this.active = true;
+		repaint();
+	}
+	
+	public void removeActive() {
+		this.active = false;
+		repaint();
+	}
+
+	/* mouse methods */
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// it is the active element
+		active = true;
+		repaint();
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// it is not the active element
+		active = false;
+		repaint();
+		
 	}
 	
 }
