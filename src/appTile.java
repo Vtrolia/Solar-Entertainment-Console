@@ -1,5 +1,6 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -54,7 +55,9 @@ public class appTile extends JPanel {
 			icon = ImageIO.read(new File(iconFile));
 			
 		}
-		catch(Exception e) {}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -72,7 +75,8 @@ public class appTile extends JPanel {
 		g2.drawRoundRect(this.x, this.y, width, height, 10, 10);
 		g2.drawImage(icon, x + width / 2 - 24, y + height / 2 - 24, this);
 		
-		g2.setColor(new Color(0, 0, 0, 200));
+		// draw spot where name will appear
+		g2.setColor(new Color(0, 0, 0));
 		g2.fillRoundRect(x + 1, y + 1, width - 2, height / 8, 10, 10);
 	}
 
@@ -92,16 +96,6 @@ public class appTile extends JPanel {
 
 	public void setY(int y) {
 		this.y = y;
-	}
-	
-	public static void main(String[]args) {
-		JFrame fr = new JFrame();
-		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		fr.setSize(800, 800);
-		fr.getContentPane().setBackground(Color.BLUE);
-		appTile ap = new appTile(10, 10, 300, 300, "", "None");
-		fr.getContentPane().add(ap);
-		fr.setVisible(true);
 	}
 	
 }

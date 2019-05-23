@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class gui extends JFrame {
@@ -17,13 +18,15 @@ public class gui extends JFrame {
 	private Dimension screenSize;
 	
 	/* used to paint and change what's drawn on screen */
-	public JPanel innerPanel;
+	public JLayeredPane innerPanel;
+	public JLabel background;
 	
+	private appTile[][] apps;
 	
 	/**
 	 * Constructor, creates a full-screen JFrame and the panel, and adds the background art.
 	 */
-	public gui() {
+	public gui(int numOfApps, String[] names, String[] iconFiles) {
 		// create window and set it to the full size of the screen
 		super("Solar Entertainment Console");
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -37,11 +40,13 @@ public class gui extends JFrame {
 		pack();
 		setResizable(false);
 		
-		// border layout, set the inner panel to the same size as the frame
-		innerPanel = new JPanel();
-		innerPanel.setSize(screenSize);
-		innerPanel.setLayout(new BorderLayout());
-		add(innerPanel);
+		JPanel contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
+		innerPanel = new JLayeredPane();
+		contentPane.add(innerPanel, BorderLayout.CENTER);
 		
 		// draw the intro then reset the panel
 		drawIntro();
@@ -51,11 +56,15 @@ public class gui extends JFrame {
 		 * image. This will be drawn using a JLabel applied directly on the frame and then
 		 * adding the content panel afterwards.
 		 */
-		JLabel background = new JLabel();
-		background.setLocation(0, 0);
+		background = new JLabel();
+		background.setBounds(0, 0, screenSize.width, screenSize.height);
 		drawBackground(background, "ec_bg.png");
 		innerPanel.add(background);
-		innerPanel.paintAll(getGraphics());
+		
+		// create appTile array and draw them on the screen
+		apps = new appTile[numOfApps][4];
+		createApps(names, iconFiles);
+		drawApps();
 	}
 	
 	
@@ -66,6 +75,7 @@ public class gui extends JFrame {
 		// add the logo
 		ImageIcon logo = new ImageIcon(this.getClass().getResource("logo.gif"));
 		JLabel icon = new JLabel(logo);
+		icon.setBounds(0, screenSize.height / 2, screenSize.width, screenSize.height / 2);
 		innerPanel.add(icon);
 		setVisible(true);
 		
@@ -142,8 +152,71 @@ public class gui extends JFrame {
 		return;
 	}
 	
-	public static void main(String[] args) {
-		gui GUI = new gui();
+	
+	/**
+	 * Creates and sets positions for all of the tiles for apps to be displayed on screen. Ads a gap
+	 * between each tile and each row of tiles and stores them in the apps variable.
+	 * 
+	 * * names and iconPaths must be of equal lengths, pass in empty string for apps with no icon.**
+	 * 
+	 * @param names: the string of names to be associated with the app.
+	 * @param iconPaths: the path to the icon file to be displayed in the tile. 
+	 */
+	public void createApps(String[] names, String[] iconPaths) {
+		// throw an exception if both arguments are the same length
+		if (names.length != iconPaths.length) {
+			throw new IllegalArgumentException("There must be as many iconPaths as names!(can pass blank String)");
+		}
 		
+		// keep track of where to draw and where to insert blank tiles
+		int nameNum = 0;
+		int x = 0;
+		
+		// keep track of vertical height and the gaps between tiles
+		int widthGap = (int) (screenSize.getWidth() / 10) / 2;
+		int heightGap = (int) (screenSize.getHeight() / 10) / 2;
+		int y = heightGap * 2;
+		
+		// calculate width and height the scaled tiles should be
+		final int width = (int) ((screenSize.getWidth() / 4.5)) - widthGap;
+		final int height = (int) ((screenSize.getHeight() / 2.5)) - heightGap;
+		
+		// for each row
+		for (int i = 0; i < apps.length; i++)
+		{
+			x = widthGap;
+			for (int j = 0; j < apps[i].length; j++) {
+				// display a blank tile if there aren't enough per row
+				if (nameNum < names.length) {
+					apps[i][j] = new appTile(0, 0, width, height, iconPaths[nameNum], names[nameNum]);
+					apps[i][j].setBounds(x, y, width, height);
+				}
+				else {
+					apps[i][j] = new appTile(0, 0, width, height, "Empty", "");
+					apps[i][j].setBounds(x, y, width, height);
+				}
+				// move each tile according to the gaps needed
+				x += width + widthGap;
+			}
+			y += height + heightGap;
+		}
+		
+	}
+	
+	/**
+	 * Draws each appTile on the main screen
+	 */
+	public void drawApps() {
+		for (int i = 0; i < apps.length; i++) {
+			for (int j = 0; j < apps[i].length; j++) {
+				innerPanel.add(apps[i][j]);
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		String[] a = {"a", "b"};
+		String[] b = {"no_icon.png", "no_icon.png"};
+		gui GUI = new gui(2, a, b);
 	}
 }
