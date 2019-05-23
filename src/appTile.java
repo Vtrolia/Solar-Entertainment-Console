@@ -66,6 +66,7 @@ public class appTile extends JPanel implements MouseListener {
 		addMouseListener(this);
 	}
 	
+	
 	/**
 	 * Draw the rectangle and image within
 	 */
@@ -117,6 +118,10 @@ public class appTile extends JPanel implements MouseListener {
 		this.y = y;
 	}
 	
+	public boolean getActive() {
+		return this.active;
+	}
+	
 	/* public interfaces for when key presses and remote button entries are implemented */
 	public void setActive() {
 		this.active = true;
@@ -127,17 +132,21 @@ public class appTile extends JPanel implements MouseListener {
 		this.active = false;
 		repaint();
 	}
-
+	
+	
 	/* mouse methods */
 	@Override
 	public void mouseClicked(MouseEvent e) {}
-
 	@Override
 	public void mousePressed(MouseEvent e) {}
-
 	@Override
 	public void mouseReleased(MouseEvent e) {}
 
+	
+	/**
+	 * When the mouse hovers over the tile, it displays the name and changes the
+	 * display color to the active color 
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// it is the active element
@@ -146,6 +155,9 @@ public class appTile extends JPanel implements MouseListener {
 		
 	}
 
+	/**
+	 * When the mouse leaves a tile, remove name and gray it back out
+	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// it is not the active element

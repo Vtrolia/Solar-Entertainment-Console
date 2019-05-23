@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +14,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
-public class gui extends JFrame {
+public class gui extends JFrame implements KeyListener {
 	
 	/* for multiple methods to get the screen size */
 	private Dimension screenSize;
@@ -36,6 +38,7 @@ public class gui extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);
 	    setUndecorated(true);
+	    addKeyListener(this);
 	    
 		pack();
 		setResizable(false);
@@ -202,7 +205,10 @@ public class gui extends JFrame {
 			y += height + heightGap;
 		}
 		
+		apps[0][0].setActive();
+		
 	}
+	
 	
 	/**
 	 * Draws each appTile on the main screen
@@ -215,9 +221,65 @@ public class gui extends JFrame {
 		}
 	}
 	
+	
+	/**
+	 * When an arrow key is pressed and the active tile needs to be moved, The active
+	 * tile needs to be changed. This function finds the active tile and creates
+	 * a new Dimension where the width is the row, height is the tile. 
+	 * @return: a Dimension with coordinates to the active tile in the apps array
+	 */
+	public Dimension getActiveTile() {
+		for (int i = 0; i < apps.length; i++) {
+			for (int j = 0; j < apps[i].length; j++) {
+				if (apps[i][j].getActive())
+				{
+					return new Dimension(i, j);
+				}
+			}
+		}
+		return new Dimension(0, 0);
+	}
+	
 	public static void main(String[] args) {
 		String[] a = {"abba", "baavbba"};
 		String[] b = {"no_icon.png", "no_icon.png"};
 		gui GUI = new gui(2, a, b);
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+	@Override
+	public void keyReleased(KeyEvent e) {}
+
+	
+	/**
+	 * When an arrow key is pressed, moves active tile in the direction
+	 * of the arrow pressed
+	 */
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int keyCode = e.getKeyCode();
+		Dimension active = getActiveTile();
+		switch(keyCode) {
+		case KeyEvent.VK_UP:
+			apps[active.width][active.height].removeActive();
+			apps[(active.width -1) % apps.length][active.height].setActive();
+			break;
+		case KeyEvent.VK_DOWN:
+			apps[active.width][active.height].removeActive();
+			apps[(active.width + 1) % apps.length][active.height].setActive();
+			break;
+		case KeyEvent.VK_LEFT:
+			apps[active.width][active.height].removeActive();
+			apps[active.width][(active.height - 1) % 3].setActive();
+			break;
+		case KeyEvent.VK_RIGHT:
+			apps[active.width][active.height].removeActive();
+			apps[active.width][(active.height) + 1 % 3].setActive();
+			break;
+		}
+	}
+
+
+	
 }
