@@ -263,7 +263,7 @@ public class gui extends JFrame implements KeyListener {
 		switch(keyCode) {
 		case KeyEvent.VK_UP:
 			apps[active.width][active.height].removeActive();
-			apps[(active.width -1) % apps.length][active.height].setActive();
+			apps[Math.abs(active.width -1) % apps.length][active.height].setActive();
 			break;
 		case KeyEvent.VK_DOWN:
 			apps[active.width][active.height].removeActive();
@@ -271,7 +271,7 @@ public class gui extends JFrame implements KeyListener {
 			break;
 		case KeyEvent.VK_LEFT:
 			apps[active.width][active.height].removeActive();
-			apps[active.width][(active.height - 1) % 3].setActive();
+			apps[active.width][Math.abs(active.height - 1) % 3].setActive();
 			break;
 		case KeyEvent.VK_RIGHT:
 			apps[active.width][active.height].removeActive();
