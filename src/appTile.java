@@ -12,6 +12,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+
+/**
+ * This class is the implementation of each tile displayed on the screen. It holds an
+ * Icon and the name of the App, and controls how the differece between an active and 
+ * inactive title are displayed. It also implements the mouse listening events.
+ * 
+ * @author Vincent Trolia
+ *
+ */
 @SuppressWarnings("serial")
 public class appTile extends JPanel implements MouseListener {
 	
@@ -57,7 +66,10 @@ public class appTile extends JPanel implements MouseListener {
 		
 		// set the icon in the middle of the tile
 		if (iconFile.isEmpty()) {
-			iconFile = "no_icon.png";
+			iconFile = "resources\\no_icon.png";
+		}
+		else {
+			iconFile = "icons\\" + iconFile;
 		}
 		try {
 			icon = ImageIO.read(new File(iconFile));

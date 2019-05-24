@@ -13,6 +13,15 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+
+/**
+ * This class implements the main Graphical User Interface of the Solar Entertainment Console
+ * It takes in shortcuts and icon file paths to generate tiles to display on the screen.
+ * It loads the splash animation screen and holds all of the information about the tiles.
+ * Also, this class handles the keyboard listening for the active tile
+ * @author Vincent Trolia
+ *
+ */
 @SuppressWarnings("serial")
 public class gui extends JFrame implements KeyListener {
 	
@@ -35,7 +44,7 @@ public class gui extends JFrame implements KeyListener {
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		getContentPane().setPreferredSize(screenSize);
 		try {
-			this.setIconImage(ImageIO.read(new File("logo.png")));
+			this.setIconImage(ImageIO.read(new File("resources\\logo.png")));
 		}
 		catch(Exception e) {}
 		
@@ -66,7 +75,7 @@ public class gui extends JFrame implements KeyListener {
 		 */
 		background = new JLabel();
 		background.setBounds(0, 0, screenSize.width, screenSize.height);
-		drawBackground(background, "ec_bg.png");
+		drawBackground(background, "resources\\ec_bg.png");
 		innerPanel.add(background);
 		
 		// create appTile array and draw them on the screen
@@ -91,7 +100,7 @@ public class gui extends JFrame implements KeyListener {
 		AudioInputStream bloodyStream = null;
 		try {
 			// use DataLine interface to know when audio track ends
-			bloodyStream = AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("intro.wav"));
+			bloodyStream = AudioSystem.getAudioInputStream(new File("resources\\intro.wav"));
 			AudioFormat format = bloodyStream.getFormat();
 			DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 			SourceDataLine bloodyStone = (SourceDataLine) AudioSystem.getLine(info);
@@ -244,13 +253,9 @@ public class gui extends JFrame implements KeyListener {
 		}
 		return new Dimension(0, 0);
 	}
-	
-	public static void main(String[] args) {
-		String[] a = {"Netflix", "Youtube", "Hulu", "Amazon", "Crunchyroll"};
-		String[] b = {"icons\\netflix.png", "icons\\youtube.png", "icons\\Hulu.png", "icons\\amazon.png", "icons\\Crunchyroll.png"};
-		gui GUI = new gui(2, a, b);
-	}
 
+	
+	/* unused keyboard events */
 	@Override
 	public void keyTyped(KeyEvent e) {}
 	@Override
