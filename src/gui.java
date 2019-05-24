@@ -34,6 +34,10 @@ public class gui extends JFrame implements KeyListener {
 		super("Solar Entertainment Console");
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		getContentPane().setPreferredSize(screenSize);
+		try {
+			this.setIconImage(ImageIO.read(new File("logo.png")));
+		}
+		catch(Exception e) {}
 		
 		// makes sure it takes up the entire screen with no title bar
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
