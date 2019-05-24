@@ -12,24 +12,30 @@ import java.util.ArrayList;
  */
 public class main {
 	public static void main(String[] args) {
+		// load the needed variables
 		BufferedReader appList = null;
 		ArrayList<String> apps = null;
 		
+		// exit the app if any operation cannot be done
 		try {
-			
 			appList = new BufferedReader(new FileReader("apps.applist"));
 			apps = new ArrayList<String>();
+			
+			/* appList is a file where the user adds in the names of the apps they want
+			 * displayed. Read each of them and then add them to the gui
+			 */
 			String str;
 			while((str = appList.readLine()) != null)
 				apps.add(str);
-		} catch (Exception e) {}
 		
-		String[][] names = new String[2][apps.size()];
-		for(int i = 0; i < apps.size(); i++) {
-			names[0][i] = apps.get(i);
-			names[1][i] = apps.get(i) + ".png";
+			String[][] names = new String[2][apps.size()];
+			for(int i = 0; i < apps.size(); i++) {
+				names[0][i] = apps.get(i);
+				names[1][i] = apps.get(i) + ".png";
+			}
+			
+			gui GUI = new gui(2, names[0], names[1]);
 		}
-		
-		gui GUI = new gui(2, names[0], names[1]);
+		catch(Exception e) {};
 	}
 }

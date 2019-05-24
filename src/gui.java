@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -82,6 +83,17 @@ public class gui extends JFrame implements KeyListener {
 		apps = new appTile[numOfApps][4];
 		createApps(names, iconFiles);
 		drawApps();
+		
+		/* When launched as a startup application, it needs to be clicked
+		 * to get incoming keyboard presses, so this simulates that mouse
+		 * click
+		 */
+		try {
+			Robot activeMaker = new Robot();
+			activeMaker.mouseMove(0,  0);
+			activeMaker.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+			activeMaker.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+		} catch (AWTException e) {}
 	}
 	
 	
