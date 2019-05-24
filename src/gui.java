@@ -24,6 +24,7 @@ public class gui extends JFrame implements KeyListener {
 	public JLabel background;
 	
 	private appTile[][] apps;
+
 	
 	/**
 	 * Constructor, creates a full-screen JFrame and the panel, and adds the background art.
@@ -241,8 +242,8 @@ public class gui extends JFrame implements KeyListener {
 	}
 	
 	public static void main(String[] args) {
-		String[] a = {"abba", "baavbba"};
-		String[] b = {"no_icon.png", "no_icon.png"};
+		String[] a = {"Netflix", "Youtube", "Hulu"};
+		String[] b = {"icons\\netflix.png", "icons\\youtube.png", "icons\\Hulu.png"};
 		gui GUI = new gui(2, a, b);
 	}
 
@@ -277,6 +278,8 @@ public class gui extends JFrame implements KeyListener {
 			apps[active.width][active.height].removeActive();
 			apps[active.width][(active.height) + 1 % 3].setActive();
 			break;
+		case KeyEvent.VK_ENTER:
+			apps[active.width][active.height].openApp();
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -30,6 +31,9 @@ public class appTile extends JPanel implements MouseListener {
 	/* name to be displayed when active */
 	private String name;
 	private boolean active;
+	
+	/* app shortcut folder location */
+	public static final String appFolder = "\\Apps\\";
 	
 	
 	/**
@@ -134,9 +138,31 @@ public class appTile extends JPanel implements MouseListener {
 	}
 	
 	
+	/**
+	 * When enter key is pressed or tile is clicked, it opens the associated media app
+	 */
+	public void openApp() {
+		Runtime app = Runtime.getRuntime();
+		
+		// don't do anything if there is no app
+		if (this.name.equals("Empty")) {
+			return;
+		}
+		
+		// use the windows command line to run the applications
+		try {
+			app.exec("cmd /c START " + System.getProperty("user.dir") + appFolder + name);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	/* mouse methods */
 	@Override
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+		openApp();
+	}
 	@Override
 	public void mousePressed(MouseEvent e) {}
 	@Override
