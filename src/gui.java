@@ -246,8 +246,8 @@ public class gui extends JFrame implements KeyListener {
 	}
 	
 	public static void main(String[] args) {
-		String[] a = {"Netflix", "Youtube", "Hulu"};
-		String[] b = {"icons\\netflix.png", "icons\\youtube.png", "icons\\Hulu.png"};
+		String[] a = {"Netflix", "Youtube", "Hulu", "Amazon", "Crunchyroll"};
+		String[] b = {"icons\\netflix.png", "icons\\youtube.png", "icons\\Hulu.png", "icons\\amazon.png", "icons\\Crunchyroll.png"};
 		gui GUI = new gui(2, a, b);
 	}
 
@@ -276,11 +276,11 @@ public class gui extends JFrame implements KeyListener {
 			break;
 		case KeyEvent.VK_LEFT:
 			apps[active.width][active.height].removeActive();
-			apps[active.width][Math.abs(active.height - 1) % 3].setActive();
+			apps[active.width][Math.abs(active.height - 1) % 4].setActive();
 			break;
 		case KeyEvent.VK_RIGHT:
 			apps[active.width][active.height].removeActive();
-			apps[active.width][(active.height) + 1 % 3].setActive();
+			apps[active.width][(active.height + 1) % 4].setActive();
 			break;
 		case KeyEvent.VK_ENTER:
 			apps[active.width][active.height].openApp();
